@@ -1,15 +1,19 @@
 import express from 'express';
-import { register, login, verifyEmail, requestPasswordReset, resetPassword } from '../controllers/authController.js';
+import { register, login, verifyEmail, requestPasswordReset, resetPassword, resendVerificationEmail } from '../controllers/authController.js';
 import { authorize, protect } from '../middlewares/authMiddleware.js';
+import { validate } from '../middlewares/validate.js';
+import { createUserSchema } from '../validations/user.validation.js';
 
 const router = express.Router();
 
-router.post('/register', register);
+router.post('/register', validate(createUserSchema), register);
+
 router.post('/login', login);
 router.get('/verify/:token', verifyEmail);
 
 router.post('/password-reset-request', requestPasswordReset);
 router.post('/reset-password/:token', resetPassword);
+router.post('/resend-verification', resendVerificationEmail);
 
 router.get('/user-profile', protect, (req, res) => {
   res.json({ message: `Bienvenue ${req.user.name}` });
@@ -17,7 +21,6 @@ router.get('/user-profile', protect, (req, res) => {
 
 router.get('/admin-panel', protect, authorize('admin'), (req, res) => {
   res.json({ message: 'Bienvenue dans le panneau admin' });
- 
 });
 
 router.get('/moderator-section', protect, authorize('moderator', 'admin'), (req, res) => {

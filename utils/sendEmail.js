@@ -4,8 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Test temporaire (à supprimer une fois que ça marche)
-console.log("ELASTIC_EMAIL:", process.env.ELASTIC_EMAIL);
-console.log("ELASTIC_API_KEY:", process.env.ELASTIC_API_KEY);
+//console.log("ELASTIC_EMAIL:", process.env.ELASTIC_EMAIL);
+//console.log("ELASTIC_API_KEY:", process.env.ELASTIC_API_KEY);
 
 // const transporter = nodemailer.createTransport({
 //   host: "smtp.elasticemail.com",
@@ -26,6 +26,10 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+    tls: {
+    rejectUnauthorized: false,
+  },
+
 });
 
 export default async function sendEmail({ to, subject, html }) {
@@ -39,6 +43,6 @@ export default async function sendEmail({ to, subject, html }) {
     console.log("Email envoyé:", info.messageId);
   } catch (error) {
     console.error("Erreur envoi email:", error);
-    throw new Error("Erreur lors de l’envoi de l’email");
+    throw new Error("Erreur lors de l'envoi de l'email");
   }
 }

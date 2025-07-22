@@ -25,7 +25,7 @@ function auditDependencies() {
 
 // Planification du cron job toutes les 10 secondes
 const auditTask = cron.schedule("0 0 0 * * *", () => {
-  console.log("Démarrage du cron d’audit des dépendances...");
+  console.log("Démarrage du cron d'audit des dépendances...");
   auditDependencies();
 });
 
