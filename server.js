@@ -7,6 +7,8 @@ import deleteUserCron from "./middlewares/deleteUser.js";
 import auditDependencies from "./middlewares/auditDependencies.js";
 import helmet from "helmet";
 import cors from "cors";
+import { authLimiter } from "./middlewares/rateLimiter.js";
+
 
 dotenv.config();
 
@@ -25,6 +27,7 @@ app.use(helmet());
 deleteUserCron.start();
 auditDependencies.start();
 
+app.use(authLimiter)
 app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT;
@@ -32,7 +35,6 @@ if (!PORT) {
   console.error("PORT non défini !");
   process.exit(1);
 }
-
 
 const server = app.listen(PORT, () =>
   console.log(`Server running on port ${PORT}`)
